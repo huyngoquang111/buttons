@@ -14,12 +14,9 @@
       margin: 0;
       height: 100vh;
       background-color: black;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
       font-family: 'Arcade', sans-serif;
+      overflow: hidden;
+      position: relative;
       transition: background-color 0.5s;
     }
 
@@ -30,9 +27,9 @@
     .title {
       color: red;
       font-size: 40px;
-      margin-bottom: 20px;
-      animation: blink 1s infinite;
       text-align: center;
+      margin-top: 30px;
+      animation: blink 1s infinite;
     }
 
     @keyframes blink {
@@ -41,7 +38,11 @@
     }
 
     .button-container {
-      position: relative;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
     }
 
     .main-button {
@@ -52,7 +53,6 @@
       border-radius: 50%;
       cursor: pointer;
       animation: pulse 1s infinite;
-      z-index: 10;
     }
 
     @keyframes pulse {
@@ -64,7 +64,6 @@
     .cat-icon {
       position: absolute;
       width: 60px;
-      height: auto;
       pointer-events: auto;
       cursor: pointer;
       opacity: 0;
@@ -73,22 +72,11 @@
     }
 
     @keyframes bounceIn {
-      0% {
-        transform: scale(0.3);
-        opacity: 0;
-      }
-      50% {
-        transform: scale(1.2);
-        opacity: 1;
-      }
-      70% {
-        transform: scale(0.9);
-      }
-      100% {
-        transform: scale(1);
-      }
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.2); opacity: 1; }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); }
     }
-
   </style>
 </head>
 <body>
@@ -104,10 +92,12 @@
     let holdTimeout;
     let catCount = 0;
     const maxCats = 20;
+    let isHolding = false;
 
     button.addEventListener('mousedown', () => {
+      isHolding = true;
       holdTimeout = setTimeout(() => {
-        if (catCount < maxCats) {
+        if (isHolding && catCount < maxCats) {
           createCatIcon();
           flashBackground();
           catCount++;
@@ -116,10 +106,12 @@
     });
 
     button.addEventListener('mouseup', () => {
+      isHolding = false;
       clearTimeout(holdTimeout);
     });
 
     button.addEventListener('mouseleave', () => {
+      isHolding = false;
       clearTimeout(holdTimeout);
     });
 
@@ -128,13 +120,12 @@
       catImg.src = 'asset/Nw6vUtDpPTTcc3WAR0um.png';
       catImg.classList.add('cat-icon');
 
-      const angle = Math.random() * 2 * Math.PI;
-      const radius = Math.floor(Math.random() * 200 + 100);
-      const x = radius * Math.cos(angle);
-      const y = radius * Math.sin(angle);
+      // Random position within viewport
+      const x = Math.random() * (window.innerWidth - 60);
+      const y = Math.random() * (window.innerHeight - 60);
 
-      catImg.style.left = `calc(50% + ${x}px)`;
-      catImg.style.top = `calc(50% + ${y}px)`;
+      catImg.style.left = `${x}px`;
+      catImg.style.top = `${y}px`;
 
       catImg.addEventListener('dblclick', () => {
         catImg.remove();
@@ -146,7 +137,9 @@
 
     function flashBackground() {
       body.classList.add('flash');
-      setTimeout(() => body.classList.remove('flash'), 1500);
+      setTimeout(() => {
+        body.classList.remove('flash');
+      }, 1500);
     }
   </script>
 </body>
