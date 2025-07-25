@@ -100,6 +100,21 @@
       0% { transform: translate(-50%, 0); opacity: 1; }
       100% { transform: translate(-50%, -100px); opacity: 0; }
     }
+     .yay-message {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    color: red;
+    font-family: 'Arcade', sans-serif;
+    animation: blink 0.5s step-end infinite;
+    z-index: 1000;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
   </style>
 </head>
 <body>
@@ -141,23 +156,43 @@
     }
 
     // Bộ đếm đến 17:30 hằng ngày
-    function updateCountdown() {
-      const now = new Date();
-      const target = new Date();
-      target.setHours(17, 30, 0, 0); // 17:30 hôm nay
+  function updateCountdown() {
+  const now = new Date();
+  const target = new Date();
+  target.setHours(17, 30, 0, 0); // 17:30 hôm nay
 
-      // Nếu đã quá 17:30 hôm nay thì target là 17:30 ngày mai
-      if (now > target) {
-        target.setDate(target.getDate() + 1);
-      }
+  // Nếu đã quá 17:30 hôm nay thì target là 17:30 ngày mai
+  if (now > target) {
+    target.setDate(target.getDate() + 1);
+  }
 
-      const diff = target - now;
-      const hours = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, '0');
-      const minutes = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
-      const seconds = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+  const diff = target - now;
+  const hours = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, '0');
+  const minutes = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+  const seconds = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
 
-      document.getElementById('countdown').textContent = `COUNTDOWN ${hours}:${minutes}:${seconds}`;
-    }
+  document.getElementById('countdown').textContent = `COUNTDOWN TO 17:30 → ${hours}:${minutes}:${seconds}`;
+
+  // Nếu countdown đạt đúng 17:30:00
+  if (diff <= 1000 && !window._yayShown) {
+    showYay();
+    window._yayShown = true;
+    setTimeout(() => {
+      const yay = document.getElementById('yay');
+      if (yay) yay.remove();
+      window._yayShown = false; // reset cho hôm sau
+    }, 10000); // 10 giây
+  }
+}
+
+function showYay() {
+  const yay = document.createElement('div');
+  yay.id = 'yay';
+  yay.className = 'yay-message';
+  yay.textContent = 'yayyyyyyy!';
+  document.body.appendChild(yay);
+}
+
 
     setInterval(updateCountdown, 1000);
     updateCountdown(); // gọi ban đầu
