@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Red Button Click</title>
+  <style>
+    @font-face {
+      font-family: 'Pixel';
+      src: url('https://fonts.cdnfonts.com/s/19886/PressStart2P-Regular.woff') format('woff');
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: #111;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Pixel', sans-serif;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 30px;
+      letter-spacing: 2px;
+    }
+
+    button {
+      padding: 20px 40px;
+      background-color: #e63946;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      font-family: 'Pixel', sans-serif;
+      transition: transform 0.1s ease;
+      box-shadow: 0 5px #a02833;
+    }
+
+    button:hover {
+      background-color: #d62828;
+    }
+
+    button:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px #a02833;
+    }
+  </style>
+</head>
+<body>
+  <h1>CLICK!</h1>
+  <button>PRESS</button>
+</body>
+</html>
