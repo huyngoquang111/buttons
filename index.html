@@ -16,12 +16,13 @@
       height: 100vh;
       background: #111;
       color: #fff;
+      overflow: hidden;
+      font-family: 'Arcade', sans-serif;
+      text-align: center;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      font-family: 'Arcade', sans-serif;
-      text-align: center;
       transition: background-color 0.3s ease;
     }
 
@@ -39,12 +40,14 @@
       margin-bottom: 30px;
       letter-spacing: 2px;
       font-family: 'Arcade', sans-serif;
+      z-index: 10;
     }
 
     .button-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
       display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
       justify-content: center;
       align-items: center;
     }
@@ -60,6 +63,8 @@
       font-family: 'Arcade', sans-serif;
       transition: transform 0.1s ease;
       box-shadow: 0 5px #a02833;
+      position: relative;
+      z-index: 5;
     }
 
     button.main:hover {
@@ -71,21 +76,31 @@
       box-shadow: 0 2px #a02833;
     }
 
-    .sub-button {
-      padding: 16px 30px;
-      background-color: #ffca3a;
-      border: none;
-      border-radius: 8px;
-      color: black;
-      font-size: 18px;
-      font-family: 'Arcade', sans-serif;
+    .cat-icon {
+      position: absolute;
+      width: 60px;
+      height: auto;
+      animation: bounceIn 0.5s ease-out forwards;
       cursor: pointer;
-      animation: popIn 0.3s ease-out;
+      opacity: 0;
+      z-index: 4;
     }
 
-    @keyframes popIn {
-      from { transform: scale(0.5); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+    @keyframes bounceIn {
+      0% {
+        transform: scale(0.3) translateY(-200px);
+        opacity: 0;
+      }
+      60% {
+        transform: scale(1.1) translateY(30px);
+        opacity: 1;
+      }
+      80% {
+        transform: scale(0.95) translateY(-10px);
+      }
+      100% {
+        transform: scale(1) translateY(0);
+      }
     }
 
     .pop-text {
@@ -93,6 +108,9 @@
       color: #fcbf49;
       margin-bottom: 10px;
       animation: blink 1s ease-in-out;
+      position: absolute;
+      top: 10%;
+      z-index: 10;
     }
 
     @keyframes blink {
@@ -104,48 +122,54 @@
 <body>
   <h1>CLICK!</h1>
   <div id="pop-container"></div>
-  <div class="button-container">
+  <div class="button-container" id="buttonContainer">
     <button class="main" id="mainButton">PRESS</button>
   </div>
 
   <script>
     const mainButton = document.getElementById('mainButton');
-    const buttonContainer = document.querySelector('.button-container');
+    const buttonContainer = document.getElementById('buttonContainer');
     const popContainer = document.getElementById('pop-container');
     const body = document.body;
 
     let holdTimer = null;
-    let subButtonCount = 0;
-    const MAX_SUB_BUTTONS = 20;
+    let catCount = 0;
+    const MAX_CATS = 20;
 
     mainButton.addEventListener('mousedown', () => {
       holdTimer = setTimeout(() => {
-        if (subButtonCount < MAX_SUB_BUTTONS) {
-          createSubButton();
+        if (catCount < MAX_CATS) {
+          createCatIcon();
           showPopText();
           flashBackground();
-          subButtonCount++;
+          catCount++;
         }
       }, 5000); // 5 seconds hold
     });
 
-    mainButton.addEventListener('mouseup', () => {
-      clearTimeout(holdTimer);
-    });
+    mainButton.addEventListener('mouseup', () => clearTimeout(holdTimer));
+    mainButton.addEventListener('mouseleave', () => clearTimeout(holdTimer));
 
-    mainButton.addEventListener('mouseleave', () => {
-      clearTimeout(holdTimer);
-    });
+    function createCatIcon() {
+      const catImg = document.createElement('img');
+      catImg.src = 'assets/anh-meo-4-removebg-preview.png';
+      catImg.classList.add('cat-icon');
 
-    function createSubButton() {
-      const subBtn = document.createElement('button');
-      subBtn.classList.add('sub-button');
-      subBtn.innerText = 'POP!';
-      subBtn.addEventListener('dblclick', () => {
-        subBtn.remove();
-        subButtonCount--;
+      // Random vị trí quanh tâm màn hình
+      const angle = Math.random() * 2 * Math.PI;
+      const radius = Math.floor(Math.random() * 200 + 100); // 100–300px
+      const x = radius * Math.cos(angle);
+      const y = radius * Math.sin(angle);
+
+      catImg.style.left = `calc(50% + ${x}px)`;
+      catImg.style.top = `calc(50% + ${y}px)`;
+
+      catImg.addEventListener('dblclick', () => {
+        catImg.remove();
+        catCount--;
       });
-      buttonContainer.appendChild(subBtn);
+
+      buttonContainer.appendChild(catImg);
     }
 
     function showPopText() {
@@ -154,16 +178,12 @@
       popText.innerText = 'POP';
       popContainer.appendChild(popText);
 
-      setTimeout(() => {
-        popText.remove();
-      }, 1000);
+      setTimeout(() => popText.remove(), 1000);
     }
 
     function flashBackground() {
       body.classList.add('flash');
-      setTimeout(() => {
-        body.classList.remove('flash');
-      }, 1500);
+      setTimeout(() => body.classList.remove('flash'), 1500);
     }
   </script>
 </body>
