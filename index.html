@@ -39,7 +39,6 @@
       font-size: 32px;
       margin-bottom: 30px;
       letter-spacing: 2px;
-      font-family: 'Arcade', sans-serif;
       z-index: 10;
     }
 
@@ -53,18 +52,19 @@
     }
 
     button.main {
-      padding: 20px 40px;
+      width: 240px;
+      height: 240px;
       background-color: #e63946;
       border: none;
-      border-radius: 8px;
+      border-radius: 50%;
       color: white;
-      font-size: 20px;
+      font-size: 35px;
       cursor: pointer;
       font-family: 'Arcade', sans-serif;
-      transition: transform 0.1s ease;
-      box-shadow: 0 5px #a02833;
+      box-shadow: 0 10px #a02833;
       position: relative;
       z-index: 5;
+      transition: all 0.2s ease;
     }
 
     button.main:hover {
@@ -72,8 +72,8 @@
     }
 
     button.main:active {
-      transform: translateY(4px);
-      box-shadow: 0 2px #a02833;
+      transform: translateY(6px);
+      box-shadow: 0 4px #a02833;
     }
 
     .cat-icon {
@@ -144,18 +144,20 @@
           flashBackground();
           catCount++;
         }
-      }, 5000); // 5 seconds hold
+      }, 5000); // hold 5 seconds
     });
 
-    mainButton.addEventListener('mouseup', () => clearTimeout(holdTimer));
-    mainButton.addEventListener('mouseleave', () => clearTimeout(holdTimer));
+    const cancelHold = () => clearTimeout(holdTimer);
+    mainButton.addEventListener('mouseup', cancelHold);
+    mainButton.addEventListener('mouseleave', cancelHold);
+    window.addEventListener('mouseup', cancelHold);
 
     function createCatIcon() {
       const catImg = document.createElement('img');
-      catImg.src = 'asset/Nw6vUtDpPTTcc3WAR0um.png';
+      catImg.src = 'assets/images/Nw6vUtDpPTTcc3WAR0um.png'; // chỉnh path nếu cần
       catImg.classList.add('cat-icon');
 
-      // Random vị trí quanh tâm màn hình
+      // Random vị trí quanh tâm
       const angle = Math.random() * 2 * Math.PI;
       const radius = Math.floor(Math.random() * 200 + 100); // 100–300px
       const x = radius * Math.cos(angle);
@@ -164,6 +166,7 @@
       catImg.style.left = `calc(50% + ${x}px)`;
       catImg.style.top = `calc(50% + ${y}px)`;
 
+      // Chỉ xoá khi double click
       catImg.addEventListener('dblclick', () => {
         catImg.remove();
         catCount--;
