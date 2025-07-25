@@ -6,7 +6,7 @@
   <title>Red Button Click</title>
   <style>
     @font-face {
-      font-family: 'Arcade';
+      font-family: 'pixel';
       src: url('assets/fonts/ARCADECLASSIC.TTF') format('truetype');
     }
 
@@ -39,15 +39,15 @@
       font-size: 32px;
       margin-bottom: 10px;
       letter-spacing: 2px;
-      font-family: 'Arcade', sans-serif;
+      font-family: 'pixel', sans-serif;
       z-index: 10;
     }
 
     .countdown-timer {
       font-size: 24px;
-      font-family: 'Arcade', sans-serif;
+      font-family: 'pixel', sans-serif;
       margin-bottom: 20px;
-      color: #0ff;
+      color: #ff7b00;
       text-shadow: 1px 1px 2px #000;
     }
 
@@ -171,7 +171,7 @@
   const minutes = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
   const seconds = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
 
-  document.getElementById('countdown').textContent = `COUNTDOWN TO 17:30 → ${hours}:${minutes}:${seconds}`;
+  document.getElementById('countdown').textContent = `COUNTDOWN ${hours}:${minutes}:${seconds}`;
 
   // Nếu countdown đạt đúng 17:30:00
   if (diff <= 1000 && !window._yayShown) {
