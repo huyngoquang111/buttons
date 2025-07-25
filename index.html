@@ -77,14 +77,16 @@
     }
 
     .cat-icon {
-      position: absolute;
-      width: 60px;
-      height: auto;
-      animation: bounceIn 0.5s ease-out forwards;
-      cursor: pointer;
-      opacity: 0;
-      z-index: 4;
-    }
+  position: absolute;
+  width: 60px;
+  height: auto;
+  pointer-events: auto;
+  cursor: pointer;
+  opacity: 0;
+  animation: bounceIn 0.5s ease-out forwards;
+  z-index: 9999; /* ✅ Luôn nằm trên cùng */
+}
+
 
     @keyframes bounceIn {
       0% {
