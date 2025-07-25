@@ -72,17 +72,17 @@
     }
 
     @keyframes bounceIn {
-      0% { transform: scale(0.3); opacity: 0; }
-      50% { transform: scale(1.2); opacity: 1; }
-      70% { transform: scale(0.9); }
-      100% { transform: scale(1); }
+      0% { transform: translateY(-200px) scale(0.3); opacity: 0; }
+      50% { transform: translateY(30px) scale(1.2); opacity: 1; }
+      70% { transform: translateY(-10px) scale(0.9); }
+      100% { transform: translateY(0) scale(1); }
     }
   </style>
 </head>
 <body>
   <div class="title">CLICK!</div>
   <div class="button-container">
-    <button class="main-button"></button>
+    <button class="main-button" type="button"></button>
   </div>
 
   <script>
