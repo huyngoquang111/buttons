@@ -156,7 +156,7 @@
       const minutes = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
       const seconds = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
 
-      document.getElementById('countdown').textContent = `COUNTDOWN TO ${hours}:${minutes}:${seconds}`;
+      document.getElementById('countdown').textContent = `COUNTDOWN ${hours}:${minutes}:${seconds}`;
     }
 
     setInterval(updateCountdown, 1000);
