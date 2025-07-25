@@ -37,10 +37,18 @@
 
     h1 {
       font-size: 32px;
-      margin-bottom: 30px;
+      margin-bottom: 10px;
       letter-spacing: 2px;
       font-family: 'Arcade', sans-serif;
       z-index: 10;
+    }
+
+    .countdown-timer {
+      font-size: 24px;
+      font-family: 'Arcade', sans-serif;
+      margin-bottom: 20px;
+      color: #0ff;
+      text-shadow: 1px 1px 2px #000;
     }
 
     .button-container {
@@ -52,84 +60,51 @@
       align-items: center;
     }
 
-   button.main {
-  width: 240px;
-  height: 240px;
-  background-color: #e63946;
-  border: none;
-  border-radius: 50%;
-  color: white;
-  font-size: 35px;
-  cursor: pointer;
-  font-family: 'Arcade', sans-serif;
-  box-shadow: 0 10px #a02833;
-  position: relative;
-  z-index: 5;
-  transition: all 0.2s ease;
-}
+    button.main {
+      width: 240px;
+      height: 240px;
+      background-color: #e63946;
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 35px;
+      cursor: pointer;
+      font-family: 'Arcade', sans-serif;
+      box-shadow: 0 10px #a02833;
+      position: relative;
+      z-index: 5;
+      transition: all 0.2s ease;
+    }
 
-button.main:hover {
-  background-color: #d62828;
-}
-
-button.main:active {
-  transform: translateY(6px);
-  box-shadow: 0 10px #a02833;
-}
     button.main:hover {
       background-color: #d62828;
     }
 
     button.main:active {
-      transform: translateY(4px);
+      transform: translateY(6px);
       box-shadow: 0 2px #a02833;
     }
 
-    .cat-icon {
+    #pop-container .pop-text {
+      font-size: 20px;
+      color: yellow;
+      animation: popUp 1s ease;
       position: absolute;
-      width: 140px;
-      height: auto;
-      animation: bounceIn 0.5s ease-out forwards;
-      cursor: pointer;
-      opacity: 0;
-      z-index: 4;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Arcade', sans-serif;
     }
 
-    @keyframes bounceIn {
-      0% {
-        transform: scale(0.3) translateY(-200px);
-        opacity: 0;
-      }
-      60% {
-        transform: scale(1.1) translateY(30px);
-        opacity: 1;
-      }
-      80% {
-        transform: scale(0.95) translateY(-10px);
-      }
-      100% {
-        transform: scale(1) translateY(0);
-      }
-    }
-
-    .pop-text {
-      font-size: 28px;
-      color: #fcbf49;
-      margin-bottom: 10px;
-      animation: blink 1s ease-in-out;
-      position: absolute;
-      top: 10%;
-      z-index: 10;
-    }
-
-    @keyframes blink {
-      0%, 50%, 100% { opacity: 1; }
-      25%, 75% { opacity: 0; }
+    @keyframes popUp {
+      0% { transform: translate(-50%, 0); opacity: 1; }
+      100% { transform: translate(-50%, -100px); opacity: 0; }
     }
   </style>
 </head>
 <body>
   <h1>CLICK!</h1>
+  <div id="countdown" class="countdown-timer"></div>
   <div id="pop-container"></div>
   <div class="button-container" id="buttonContainer">
     <button class="main" id="mainButton">PRESS</button>
@@ -137,63 +112,55 @@ button.main:active {
 
   <script>
     const mainButton = document.getElementById('mainButton');
-    const buttonContainer = document.getElementById('buttonContainer');
-    const popContainer = document.getElementById('pop-container');
     const body = document.body;
+    const popContainer = document.getElementById('pop-container');
 
     let holdTimer = null;
-    let catCount = 0;
-    const MAX_CATS = 20;
 
     mainButton.addEventListener('mousedown', () => {
       holdTimer = setTimeout(() => {
-        if (catCount < MAX_CATS) {
-          createCatIcon();
-          showPopText();
-          flashBackground();
-          catCount++;
-        }
-      }, 2000); // 5 seconds hold
+        flashBackground();
+        showPopText();
+      }, 2000); // giữ 2 giây
     });
 
     mainButton.addEventListener('mouseup', () => clearTimeout(holdTimer));
     mainButton.addEventListener('mouseleave', () => clearTimeout(holdTimer));
 
-    function createCatIcon() {
-      const catImg = document.createElement('img');
-      catImg.src = 'asset/Nw6vUtDpPTTcc3WAR0um.png';
-      catImg.classList.add('cat-icon');
-
-      // Random vị trí quanh tâm màn hình
-      const angle = Math.random() * 2 * Math.PI;
-      const radius = Math.floor(Math.random() * 200 + 100); // 100–300px
-      const x = radius * Math.cos(angle);
-      const y = radius * Math.sin(angle);
-
-      catImg.style.left = calc(50% + ${x}px);
-      catImg.style.top = calc(50% + ${y}px);
-
-      catImg.addEventListener('dblclick', () => {
-        catImg.remove();
-        catCount--;
-      });
-
-      buttonContainer.appendChild(catImg);
+    function flashBackground() {
+      body.classList.add('flash');
+      setTimeout(() => body.classList.remove('flash'), 1500);
     }
 
     function showPopText() {
       const popText = document.createElement('div');
       popText.classList.add('pop-text');
-      popText.innerText = 'POP';
+      popText.innerText = 'POP!';
       popContainer.appendChild(popText);
-
       setTimeout(() => popText.remove(), 1000);
     }
 
-    function flashBackground() {
-      body.classList.add('flash');
-      setTimeout(() => body.classList.remove('flash'), 1500);
+    // Bộ đếm đến 17:30 hằng ngày
+    function updateCountdown() {
+      const now = new Date();
+      const target = new Date();
+      target.setHours(17, 30, 0, 0); // 17:30 hôm nay
+
+      // Nếu đã quá 17:30 hôm nay thì target là 17:30 ngày mai
+      if (now > target) {
+        target.setDate(target.getDate() + 1);
+      }
+
+      const diff = target - now;
+      const hours = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, '0');
+      const minutes = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+      const seconds = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+
+      document.getElementById('countdown').textContent = `COUNTDOWN TO 17:30 → ${hours}:${minutes}:${seconds}`;
     }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown(); // gọi ban đầu
   </script>
 </body>
 </html>
