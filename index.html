@@ -22,6 +22,16 @@
       align-items: center;
       font-family: 'Arcade', sans-serif;
       text-align: center;
+      transition: background-color 0.3s ease;
+    }
+
+    body.flash {
+      animation: flashWhite 1.5s ease;
+    }
+
+    @keyframes flashWhite {
+      0%   { background-color: #fff; color: #000; }
+      100% { background-color: #111; color: #fff; }
     }
 
     h1 {
@@ -31,7 +41,15 @@
       font-family: 'Arcade', sans-serif;
     }
 
-    button {
+    .button-container {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    button.main {
       padding: 20px 40px;
       background-color: #e63946;
       border: none;
@@ -44,18 +62,109 @@
       box-shadow: 0 5px #a02833;
     }
 
-    button:hover {
+    button.main:hover {
       background-color: #d62828;
     }
 
-    button:active {
+    button.main:active {
       transform: translateY(4px);
       box-shadow: 0 2px #a02833;
+    }
+
+    .sub-button {
+      padding: 16px 30px;
+      background-color: #ffca3a;
+      border: none;
+      border-radius: 8px;
+      color: black;
+      font-size: 18px;
+      font-family: 'Arcade', sans-serif;
+      cursor: pointer;
+      animation: popIn 0.3s ease-out;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.5); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .pop-text {
+      font-size: 28px;
+      color: #fcbf49;
+      margin-bottom: 10px;
+      animation: blink 1s ease-in-out;
+    }
+
+    @keyframes blink {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0; }
     }
   </style>
 </head>
 <body>
   <h1>CLICK!</h1>
-  <button>PRESS</button>
+  <div id="pop-container"></div>
+  <div class="button-container">
+    <button class="main" id="mainButton">PRESS</button>
+  </div>
+
+  <script>
+    const mainButton = document.getElementById('mainButton');
+    const buttonContainer = document.querySelector('.button-container');
+    const popContainer = document.getElementById('pop-container');
+    const body = document.body;
+
+    let holdTimer = null;
+    let subButtonCount = 0;
+    const MAX_SUB_BUTTONS = 20;
+
+    mainButton.addEventListener('mousedown', () => {
+      holdTimer = setTimeout(() => {
+        if (subButtonCount < MAX_SUB_BUTTONS) {
+          createSubButton();
+          showPopText();
+          flashBackground();
+          subButtonCount++;
+        }
+      }, 5000); // 5 seconds hold
+    });
+
+    mainButton.addEventListener('mouseup', () => {
+      clearTimeout(holdTimer);
+    });
+
+    mainButton.addEventListener('mouseleave', () => {
+      clearTimeout(holdTimer);
+    });
+
+    function createSubButton() {
+      const subBtn = document.createElement('button');
+      subBtn.classList.add('sub-button');
+      subBtn.innerText = 'POP!';
+      subBtn.addEventListener('dblclick', () => {
+        subBtn.remove();
+        subButtonCount--;
+      });
+      buttonContainer.appendChild(subBtn);
+    }
+
+    function showPopText() {
+      const popText = document.createElement('div');
+      popText.classList.add('pop-text');
+      popText.innerText = 'POP';
+      popContainer.appendChild(popText);
+
+      setTimeout(() => {
+        popText.remove();
+      }, 1000);
+    }
+
+    function flashBackground() {
+      body.classList.add('flash');
+      setTimeout(() => {
+        body.classList.remove('flash');
+      }, 1500);
+    }
+  </script>
 </body>
 </html>
